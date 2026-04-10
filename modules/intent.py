@@ -1,6 +1,6 @@
-from langchain_community.chat_models import ChatOllama
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+from langchain_community.chat_models import ChatOllama # pyright: ignore[reportMissingImports]
+from langchain_core.prompts import PromptTemplate # pyright: ignore[reportMissingImports]
+from langchain_core.output_parsers import StrOutputParser # pyright: ignore[reportMissingImports]
 
 # Initialize the tiny local LLM
 # temperature=0 makes it deterministic and less creative (good for classification)

@@ -1,7 +1,7 @@
 import os
 import re
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import PromptTemplate # pyright: ignore[reportMissingImports]
+from langchain_core.output_parsers import StrOutputParser # pyright: ignore[reportMissingImports]
 
 # SAFETY CONSTRAINT: Lock all operations to output/ folder
 OUTPUT_DIR = "output"
@@ -61,7 +61,7 @@ def write_code_tool(text: str, llm) -> dict:
     
     # 2. Determine a filename
     name_prompt = PromptTemplate.from_template(
-        "What should the filename be for this coding request? Output ONLY the filename ending in .py, .html, etc. Request: {text}"
+        "What should the filename be for this coding request? Output ONLY the filename ending in .py,.java, .html, etc. Request: {text}"
     )
     name_chain = name_prompt | llm | StrOutputParser()
     raw_filename = name_chain.invoke({"text": text})

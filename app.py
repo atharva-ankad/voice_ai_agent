@@ -1,6 +1,6 @@
 import os
-import streamlit as st
-from langchain_community.chat_models import ChatOllama
+import streamlit as st # pyright: ignore[reportMissingImports]
+from langchain_community.chat_models import ChatOllama # pyright: ignore[reportMissingImports]
 
 # Import our custom modules
 from modules.audio import transcribe_audio
