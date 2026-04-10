@@ -4,7 +4,7 @@ from faster_whisper import WhisperModel
 # "base" is small enough for your 8GB RAM. 
 # device="auto" will try to use your RTX 2050, compute_type="int8" prevents it from maxing out VRAM.
 print("Loading Faster-Whisper model... (This might take a minute the first time to download)")
-model = WhisperModel("base", device="auto", compute_type="int8")
+model = WhisperModel("base", device="cpu", compute_type="int8")
 
 def transcribe_audio(file_path):
     """

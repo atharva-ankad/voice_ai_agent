@@ -1,4 +1,5 @@
 from modules.audio import transcribe_audio
+from modules.intent import detect_intent
 import streamlit as st
 import os
 
@@ -42,8 +43,11 @@ if audio_bytes:
         with st.spinner("Transcribing audio..."):
             transcription = transcribe_audio(temp_audio_path)
             
-        # Placeholders for upcoming modules
-        detected_intent = "Pending LLM..."
+        # 3. Detect Intent
+        with st.spinner("Analyzing intent..."):
+            detected_intent = detect_intent(transcription)
+            
+        # Placeholders for upcoming execution module
         action_taken = "Pending Execution..."
         final_output = "Pending..."
         
