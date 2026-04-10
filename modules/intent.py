@@ -4,8 +4,8 @@ from langchain_core.output_parsers import StrOutputParser
 
 # Initialize the tiny local LLM
 # temperature=0 makes it deterministic and less creative (good for classification)
-print("Initializing Llama 3.2:1B for Intent Detection...")
-llm = ChatOllama(model="llama3.2:1b", temperature=0)
+print("Initializing phi3 for Intent Detection...")
+llm = ChatOllama(model="phi3", temperature=0)
 
 # We design a strict prompt to ensure the LLM doesn't chat, but only classifies.
 intent_prompt = PromptTemplate(

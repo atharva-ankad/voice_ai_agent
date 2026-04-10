@@ -7,10 +7,25 @@ from langchain_core.output_parsers import StrOutputParser
 OUTPUT_DIR = "output"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-def sanitize_filename(filename: str, default_name="generated_file.txt") -> str:
-    """Ensures the filename is safe and has no directory traversal characters."""
-    clean = re.sub(r'[^a-zA-Z0-9_\-\.]', '', filename.strip())
-    return clean if clean else default_name
+def sanitize_filename(llm_output: str, default_name="generated_file.txt") -> str:
+    """
+    Smart filename extractor. Handles chatty LLMs that output paragraphs
+    instead of just the filename to prevent OS path length crashes.
+    """
+    # 1. Search the text for anything that looks like a filename (e.g., script.py, notes.txt)
+    match = re.search(r'([a-zA-Z0-9_\-]+\.(?:py|txt|html|md|js|csv))', llm_output)
+    
+    if match:
+        return match.group(1) # Return just the matched filename
+
+    # 2. If no extension was found, clean the string of illegal characters
+    clean = re.sub(r'[^a-zA-Z0-9_\-\.]', '', llm_output.strip())
+    
+    # 3. If the string is ridiculously long (LLM hallucinated) or empty, use the default
+    if not clean or len(clean) > 40:
+        return default_name
+        
+    return clean
 
 def create_file_tool(text: str, llm) -> dict:
     """Extracts a filename from the transcription and creates an empty file."""
@@ -40,6 +55,8 @@ def write_code_tool(text: str, llm) -> dict:
         "Write the code requested here. Output ONLY raw code. No markdown backticks, no explanations. Request: {text}"
     )
     code_chain = code_prompt | llm | StrOutputParser()
+    
+    # Strip backticks just in case the model ignores instructions
     generated_code = code_chain.invoke({"text": text}).replace("```python", "").replace("```", "").strip()
     
     # 2. Determine a filename
@@ -49,6 +66,7 @@ def write_code_tool(text: str, llm) -> dict:
     name_chain = name_prompt | llm | StrOutputParser()
     raw_filename = name_chain.invoke({"text": text})
     
+    # Use our new smart extractor
     safe_name = sanitize_filename(raw_filename, "script.py")
     filepath = os.path.join(OUTPUT_DIR, safe_name)
     

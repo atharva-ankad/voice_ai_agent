@@ -14,8 +14,8 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 # Cache the LLM so it doesn't reload into RAM on every Streamlit interaction
 @st.cache_resource
 def load_llm():
-    print("Loading Llama 3.2:1B for tool execution...")
-    return ChatOllama(model="llama3.2:1b", temperature=0)
+    print("Loading phi3 for tool execution...")
+    return ChatOllama(model="phi3", temperature=0)
 
 llm = load_llm()
 
@@ -56,7 +56,7 @@ if audio_bytes:
             transcription = transcribe_audio(temp_audio_path)
             
         # 3. Detect Intent
-        with st.spinner("Analyzing intent via Llama 3.2:1B..."):
+        with st.spinner("Analyzing intent via Phi3..."):
             detected_intent = detect_intent(transcription)
             
         # 4. Execute Action via Tools Engine
