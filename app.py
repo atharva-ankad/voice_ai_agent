@@ -1,11 +1,23 @@
+import os
+import streamlit as st
+from langchain_community.chat_models import ChatOllama
+
+# Import our custom modules
 from modules.audio import transcribe_audio
 from modules.intent import detect_intent
-import streamlit as st
-import os
+from modules.tools import execute_action
 
 # SAFETY CONSTRAINT: Ensure output directory exists
 OUTPUT_DIR = "output"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+# Cache the LLM so it doesn't reload into RAM on every Streamlit interaction
+@st.cache_resource
+def load_llm():
+    print("Loading Llama 3.2:1B for tool execution...")
+    return ChatOllama(model="llama3.2:1b", temperature=0)
+
+llm = load_llm()
 
 st.set_page_config(page_title="Local AI Voice Agent", layout="centered")
 st.title("🎙️ Local Voice-Controlled AI Agent")
@@ -40,22 +52,27 @@ if audio_bytes:
             f.write(audio_bytes)
             
         # 2. Run Transcription
-        with st.spinner("Transcribing audio..."):
+        with st.spinner("Transcribing audio via Faster-Whisper..."):
             transcription = transcribe_audio(temp_audio_path)
             
         # 3. Detect Intent
-        with st.spinner("Analyzing intent..."):
+        with st.spinner("Analyzing intent via Llama 3.2:1B..."):
             detected_intent = detect_intent(transcription)
             
-        # Placeholders for upcoming execution module
-        action_taken = "Pending Execution..."
-        final_output = "Pending..."
+        # 4. Execute Action via Tools Engine
+        with st.spinner(f"Executing tool for intent: '{detected_intent}'..."):
+            # This triggers the master router we built in Step 1
+            execution_result = execute_action(detected_intent, transcription, llm)
+            
+            # Extract the dictionary values returned by tools.py
+            action_taken = execution_result.get("action", "Unknown Action")
+            final_output = execution_result.get("result", "No output generated.")
         
-        # Display the results
+        # Display the results directly mapped to the requirements
         col1, col2 = st.columns(2)
         with col1:
             st.markdown("**Transcribed Text:**")
-            st.info(transcription)  # <--- Now displaying real transcription!
+            st.info(transcription) 
             
             st.markdown("**Detected Intent:**")
             st.info(detected_intent)
