@@ -1,0 +1,5 @@
+streamlit>=1.36.0
+faster-whisper
+langchain
+langchain-community
+python-dotenv
