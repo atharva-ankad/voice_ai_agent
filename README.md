@@ -36,7 +36,7 @@ Every component runs on your own hardware. No data is sent to any external servi
 
 ## Architecture
 
-> A system flow diagram will be added here.
+![System Flow](assets/system_flow.png)
 
 The system is composed of three sequential stages orchestrated by `app.py`:
 
