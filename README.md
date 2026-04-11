@@ -36,7 +36,7 @@ Every component runs on your own hardware. No data is sent to any external servi
 
 ## Architecture
 
-![System Flow](assets/system_flow.png)
+![System Flow](https://github.com/atharva-ankad/voice_ai_agent/blob/main/assets/system_flow.png)
 
 The system is composed of three sequential stages orchestrated by `app.py`:
 
