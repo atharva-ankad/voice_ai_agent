@@ -74,7 +74,7 @@ def detect_intent(text):
         raw_intent = intent_chain.invoke({"text": text}).strip().lower()
         
         # Safety fallback: even with temperature=0, small LLMs sometimes add extra words.
-        # We enforce strict routing.
+        # Enforce strict routing.
         valid_intents = ["create_file", "write_code", "summarize_text", "general_chat"]
         for v_intent in valid_intents:
             if v_intent in raw_intent:

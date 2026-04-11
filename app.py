@@ -2,7 +2,7 @@ import os
 import streamlit as st # pyright: ignore[reportMissingImports]
 from langchain_community.chat_models import ChatOllama # pyright: ignore[reportMissingImports]
 
-# Import our custom modules
+# Import custom modules
 from modules.audio import transcribe_audio
 from modules.intent import detect_intent
 from modules.tools import execute_action
@@ -61,7 +61,7 @@ if audio_bytes:
             
         # 4. Execute Action via Tools Engine
         with st.spinner(f"Executing tool for intent: '{detected_intent}'..."):
-            # This triggers the master router we built in Step 1
+            # This triggers the master router built in Step 1
             execution_result = execute_action(detected_intent, transcription, llm)
             
             # Extract the dictionary values returned by tools.py
